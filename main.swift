@@ -6,28 +6,33 @@
 //  Copyright © 2018 MTHS. All rights reserved.
 //
 
-class MyStack {
+class MyStack<InType> {
 	//this is a class that defines a stack
-	private var list: [Int] = []
 
-	public func push(integer: Int) {
-		//append an integer to the end of the stack
-		list.append(integer)
+	enum MyError : Error {
+    	case IndexOutOfRange(String)
 	}
 
-	public func pop() throws -> Int {
-		//pop the last object from the stack and return it
-		
-		//if list.count == 0 {
-		//	throw new 
-		//}
+	private var list = [InType]()
 
-		let value: Int = list[list.count - 1]
+	public func push(object: InType) {
+		//append an object to the end of the stack
+		list.append(object)
+	}
+
+	public func pop() throws -> InType {
+		//pop the last object from the stack and return it
+
+		if list.count == 0 {
+			throw MyError.IndexOutOfRange("The list is empty")
+		}
+
+		let value = list[list.count - 1]
 		list.removeLast()
 		return value
 	}
 	
-	public func getAt(index: Int) -> Int{
+	public func getAt(index: Int) -> InType{
 		//This method returns the item at the given index
 		return list[index]
 	}
@@ -41,11 +46,11 @@ class MyStack {
 print("enter an integer")
 let input: String? = readLine(strippingNewline: true)
 if Int(input!) != nil {
-	let stackObject = MyStack()
-	stackObject.push(integer: Int(input!)!)
+	let stackObject = MyStack<Int>()
+	stackObject.push(object: Int(input!)!)
 	print("Added \(stackObject.getAt(index: 0))")
 	stackObject.printContents()
-	print("Removed \(stackObject.pop())")
+	print("Removed \(try stackObject.pop())")
 	stackObject.printContents()
-	stackObject.pop()
+	print(try stackObject.pop())
 }
